@@ -1,0 +1,84 @@
+{
+  "server": {
+    "protocol": "https",
+    "host": @@HOST@@,
+    "config_path": "/hatrac/Util/rbk-upload/config.json"
+  },
+  "catalog_id": 2,
+  "asset_mappings": [
+    {
+      "dir_pattern": "^.+?/rnaseq/(?P<study_internal_id>.+?)/",
+      "file_pattern": ".*/(?P<sample_internal_id>.*)#(?P<replicate_number>[0-9]+)(?P<custom>.*?)[.]",
+      "ext_pattern": "(?P<file_ext>(bam|bed|bw|(R1|R2)[.]fastq[.]gz|(gene[.]rpkm|tpm)[.]txt))$",
+      "base_record_type": ["RNASeq", "File"],
+      "record_query_templates": {
+        "get_record": "/entity/%(base_record_type)s/SHA256=%(sha256)s"
+      },
+      "metadata_query_templates": {
+        "get_sample_metadata": "/attribute/RNASeq:Sample/Internal_ID=%(sample_internal_id)s/Sample_Accession_ID:=Accession_ID,Study_Accession_ID,Species",
+        "get_replicate_metadata": "/attribute/RNASeq:Replicate/Sample_Accession_ID=%(Sample_Accession_ID)s&Number=%(replicate_number)s/Replicate_Accession_ID:=Accession_ID,Data_Provider,Consortium"
+      },
+      "column_value_templates": {
+        "caption": "%(Species)s %(sample_internal_id)s replicate %(replicate_number)s %(file_desc)s."
+      },
+      "hatrac_templates":{
+        "hatrac_uri": "/hatrac/resources/rnaseq/study/%(Study_Accession_ID)s/sample/%(Sample_Accession_ID)s/replicate/%(Replicate_Accession_ID)s/%(Accession_ID)s.%(file_ext)s",
+        "hatrac_filename": "%(sample_internal_id)s_Rep%(replicate_number)s%(custom)s.%(file_ext)s",
+        "content-disposition": "filename*=UTF-8''%(hatrac_filename)s"
+      },
+      "checksum_types": [
+        "sha256", "md5"
+      ]
+    }
+  ],
+  "column_map": {
+    "URI": "%(URI)s",
+    "File_Name": "%(basename)s",
+    "File_Type": "%(file_type)s",
+    "File_size": "%(file_size)d",
+    "SHA256": "%(sha256)s",
+    "Accession_ID": "%(Accession_ID)s",
+    "Sample_Accession_ID": "%(Sample_Accession_ID)s",
+    "Replicate_Accession_ID": "%(Replicate_Accession_ID)s",
+    "Consortium": "%(Consortium)s",
+    "Data_Provider": "%(Data_Provider)s",
+    "Caption": "%(caption)s"
+  },
+  "file_ext_mappings": {
+    "bam": {
+      "file_type": "bam",
+      "file_desc": "alignment"
+    },
+    "bed": {
+      "file_type": "bed",
+      "file_desc": "positive regions"
+    },
+    "gene.rpkm.txt": {
+      "file_type": "txt",
+      "file_desc": "expression value"
+    },
+    "gene.tpm.txt": {
+      "file_type": "txt",
+      "file_desc": "expression value"
+    },
+    "bw": {
+      "file_type": "bigWig",
+      "file_desc": "visualization track"
+    },
+    "R1.fastq.gz" : {
+      "file_ext": "fastq.gz",
+      "file_type": "FastQ",
+      "file_desc": "F reads"
+    },
+    "R2.fastq.gz": {
+      "file_ext": "fastq.gz",
+      "file_type": "FastQ",
+      "file_desc": "R reads"
+    }
+  },
+  "mime_overrides": {
+    "text/plain": [
+      "bed"
+    ]
+  }
+}
