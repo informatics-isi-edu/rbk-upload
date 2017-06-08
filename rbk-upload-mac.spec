@@ -2,6 +2,7 @@
 
 block_cipher = None
 
+from os import environ as env
 
 a = Analysis(['rbk_upload/upload.py'],
              pathex=[''],
