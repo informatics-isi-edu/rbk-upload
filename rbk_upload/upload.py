@@ -138,7 +138,7 @@ class RBKUpload(DerivaUpload):
             logging.info("Updating catalog for file [%s]" % file_name)
             self._catalogRecordUpdate(self.getCatalogTable(asset_mapping), current_row, updated_row)
         else:
-            logging.info("Upload not required. Catalog already up-to-date for file: [%s]" % file_name)
+            logging.info("Update not required. Catalog already up-to-date for file: [%s]" % file_name)
 
 
 def gui_main():

@@ -18,8 +18,6 @@ setup(
     version="0.1.0",
     packages=find_packages(),
     package_data={'rbk-upload': ['conf/config.json']},
-    data_files=[(os.path.expanduser(os.path.normpath(
-        "~/.deriva/rbk/rbk-upload")), ['conf/config.json'])],
     entry_points={
         'console_scripts': [
             'rbk-upload = rbk_upload.upload:gui_main',
