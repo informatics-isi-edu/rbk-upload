@@ -5,9 +5,8 @@
 
 """ Installation script for RBK Upload
 """
-
-import os
 from setuptools import setup, find_packages
+from rbk_upload.upload import RBKUpload
 
 setup(
     name="rbk-upload",
@@ -15,7 +14,7 @@ setup(
     url='https://github.com/informatics-isi-edu/rbk-upload',
     maintainer='USC Information Sciences Institute ISR Division',
     maintainer_email='misd-support@isi.edu',
-    version="0.1.0",
+    version=RBKUpload.getVersion(),
     packages=find_packages(),
     package_data={'rbk-upload': ['conf/config.json']},
     entry_points={

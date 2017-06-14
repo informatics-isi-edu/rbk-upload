@@ -11,29 +11,42 @@ INFO = "For more information see: https://github.com/informatics-isi-edu/rbk-upl
 
 
 class RBKUpload(DerivaUpload):
-
     config_dir = "~/.deriva/rbk/rbk-upload"
     metadata = dict()
     column_map = dict()
 
-    def __init__(self, config, credentials):
-        DerivaUpload.__init__(self, config, credentials)
-        self.column_map.update(config.get("column_map", {}))
+    def __init__(self, config_file=None, credential_file=None, server=None):
+        DerivaUpload.__init__(self, config_file, credential_file, server)
+        self.column_map.update(self.config.get("column_map", {}))
 
-    @staticmethod
-    def getInstance(config=None, credentials=None):
-        return RBKUpload(config, credentials)
+    @classmethod
+    def getVersion(cls):
+        return "0.1.0"
 
-    def getDeployedConfigFilePath(self):
-        return os.path.join(os.path.expanduser(
-            os.path.normpath(self.config_dir)), DerivaUpload.DefaultConfigFileName)
+    @classmethod
+    def getServers(cls):
+        return [
+            {
+                "host": "www.rebuildingakidney.org",
+                "config_path": "/hatrac/Util/rbk-upload/config.json",
+                "desc": "RBK Production",
+                "default": True
+            },
+            {
+                "host": "staging.rebuildingakidney.org",
+                "config_path": "/hatrac/Util/rbk-upload/config.json",
+                "desc": "RBK Staging"
+            },
+            {
+                "host": "dev.rebuildingakidney.org",
+                "config_path": "/hatrac/Util/rbk-upload/config.json",
+                "desc": "RBK Development"
+            }
+          ]
 
-    def getDeployedTransferStateFilePath(self):
-        return os.path.join(os.path.expanduser(
-            os.path.normpath(self.config_dir)), DerivaUpload.DefaultTransferStateFileName)
-
-    def cleanup(self):
-        DerivaUpload.cleanup(self)
+    @classmethod
+    def getDeployedConfigPath(cls):
+        return os.path.expanduser(os.path.normpath(cls.config_dir))
 
     def _getExtensionMetadata(self, ext):
         ext_map = self.config.get("file_ext_mappings", [])
