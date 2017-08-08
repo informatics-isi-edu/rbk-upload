@@ -1,23 +1,39 @@
 import os
 import sys
 import logging
-from deriva_common import urlquote
+from deriva_common import urlquote, read_config
 from deriva_io.deriva_upload import DerivaUpload
 from deriva_io.deriva_upload_cli import DerivaUploadCLI
 from deriva_qt.upload_gui.upload_app import DerivaUploadGUI
 
 DESC = "RBK Data Upload Utility"
 INFO = "For more information see: https://github.com/informatics-isi-edu/rbk-upload"
+SERVERS = [
+    {
+        "host": "www.rebuildingakidney.org",
+        "config_path": "/hatrac/Util/rbk-upload/config.json",
+        "desc": "RBK Production",
+        "default": True
+    },
+    {
+        "host": "staging.rebuildingakidney.org",
+        "config_path": "/hatrac/Util/rbk-upload/config.json",
+        "desc": "RBK Staging"
+    },
+    {
+        "host": "dev.rebuildingakidney.org",
+        "config_path": "/hatrac/Util/rbk-upload/config.json",
+        "desc": "RBK Development"
+    }
+]
 
 
 class RBKUpload(DerivaUpload):
     config_dir = "~/.deriva/rbk/rbk-upload"
     metadata = dict()
-    column_map = dict()
 
     def __init__(self, config_file=None, credential_file=None, server=None):
         DerivaUpload.__init__(self, config_file, credential_file, server)
-        self.column_map.update(self.config.get("column_map", {}))
 
     @classmethod
     def getVersion(cls):
@@ -25,24 +41,8 @@ class RBKUpload(DerivaUpload):
 
     @classmethod
     def getServers(cls):
-        return [
-            {
-                "host": "www.rebuildingakidney.org",
-                "config_path": "/hatrac/Util/rbk-upload/config.json",
-                "desc": "RBK Production",
-                "default": True
-            },
-            {
-                "host": "staging.rebuildingakidney.org",
-                "config_path": "/hatrac/Util/rbk-upload/config.json",
-                "desc": "RBK Staging"
-            },
-            {
-                "host": "dev.rebuildingakidney.org",
-                "config_path": "/hatrac/Util/rbk-upload/config.json",
-                "desc": "RBK Development"
-            }
-          ]
+        return read_config(os.path.join(
+            cls.getDeployedConfigPath(), cls.DefaultServerListFileName), create_default=True, default=SERVERS)
 
     @classmethod
     def getDeployedConfigPath(cls):
@@ -99,18 +99,19 @@ class RBKUpload(DerivaUpload):
         :return: the file record
         """
         self.metadata['base_record_type'] = self.getCatalogTable(asset_mapping)
+        column_map = asset_mapping.get("column_map", {})
         rqt = asset_mapping['record_query_templates']
         path = rqt.get("get_record") % self.metadata
         result = self.catalog.get(path).json()
         if result:
             self.metadata.update(result[0])
         else:
-            row = self.processTemplates(self.metadata, self.column_map)
+            row = self.processTemplates(self.metadata, column_map)
             result = self._catalogRecordCreate(self.getCatalogTable(asset_mapping), row)
             if result:
                 self.metadata.update(result[0])
 
-        return self.processTemplates(self.metadata, self.column_map, allowNone=True)
+        return self.processTemplates(self.metadata, column_map, allowNone=True)
 
     def uploadFile(self, file_path, asset_mapping, match_groupdict, callback=None):
         """
@@ -145,7 +146,8 @@ class RBKUpload(DerivaUpload):
                            callback=callback)
 
         # 4. Update the catalog
-        updated_row = self.processTemplates(self.metadata, self.column_map)
+        column_map = asset_mapping.get("column_map", {})
+        updated_row = self.processTemplates(self.metadata, column_map)
         file_name = self.getFileDisplayName(file_path)
         if updated_row != current_row:
             logging.info("Updating catalog for file [%s]" % file_name)

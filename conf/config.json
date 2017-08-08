@@ -23,24 +23,24 @@
         "hatrac_filename": "%(sample_internal_id)s_Rep%(replicate_number)s%(custom)s.%(file_ext)s",
         "content-disposition": "filename*=UTF-8''%(hatrac_filename)s"
       },
+      "column_map": {
+        "URI": "%(URI)s",
+        "File_Name": "%(basename)s",
+        "File_Type": "%(file_type)s",
+        "File_size": "%(file_size)d",
+        "SHA256": "%(sha256)s",
+        "Accession_ID": "%(Accession_ID)s",
+        "Sample_Accession_ID": "%(Sample_Accession_ID)s",
+        "Replicate_Accession_ID": "%(Replicate_Accession_ID)s",
+        "Consortium": "%(Consortium)s",
+        "Data_Provider": "%(Data_Provider)s",
+        "Caption": "%(caption)s"
+      },
       "checksum_types": [
         "sha256", "md5"
       ]
     }
   ],
-  "column_map": {
-    "URI": "%(URI)s",
-    "File_Name": "%(basename)s",
-    "File_Type": "%(file_type)s",
-    "File_size": "%(file_size)d",
-    "SHA256": "%(sha256)s",
-    "Accession_ID": "%(Accession_ID)s",
-    "Sample_Accession_ID": "%(Sample_Accession_ID)s",
-    "Replicate_Accession_ID": "%(Replicate_Accession_ID)s",
-    "Consortium": "%(Consortium)s",
-    "Data_Provider": "%(Data_Provider)s",
-    "Caption": "%(caption)s"
-  },
   "file_ext_mappings": {
     "bam": {
       "file_type": "bam",
