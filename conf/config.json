@@ -1,31 +1,31 @@
 {
-  "version_compatibility": [">=0.1.0", "<1.0.0"],
+  "version_compatibility": [">=0.2.0", "<1.0.0"],
   "version_update_url": "https://github.com/informatics-isi-edu/rbk-upload/releases",
-  "catalog_id": 2,
   "asset_mappings": [
     {
-      "dir_pattern": "^.+?/rnaseq/(?P<study_internal_id>.+?)/",
+      "dir_pattern": "^.*/rnaseq/(?P<study_internal_id>.+?)/",
       "file_pattern": ".*/(?P<sample_internal_id>.*)#(?P<replicate_number>[0-9]+)(?P<custom>.*?)[.]",
       "ext_pattern": "(?P<file_ext>(bam|bed|bw|(R1|R2)[.]fastq[.]gz|(gene[.]rpkm|tpm)[.]txt))$",
-      "base_record_type": ["RNASeq", "File"],
-      "record_query_templates": {
-        "get_record": "/entity/%(base_record_type)s/SHA256=%(sha256)s"
-      },
-      "metadata_query_templates": {
-        "get_sample_metadata": "/attribute/RNASeq:Sample/Internal_ID=%(sample_internal_id)s/Sample_Accession_ID:=Accession_ID,Study_Accession_ID,Species",
-        "get_replicate_metadata": "/attribute/RNASeq:Replicate/Sample_Accession_ID=%(Sample_Accession_ID)s&Number=%(replicate_number)s/Replicate_Accession_ID:=Accession_ID,Data_Provider,Consortium"
-      },
+      "target_table": ["RNASeq", "File"],
+      "create_record_before_upload": "True",
+      "record_query_template": "/entity/%(target_table)s/SHA256=%(sha256)s",
+      "metadata_query_templates": [
+        "/attribute/RNASeq:Sample/Internal_ID=%(sample_internal_id)s/Sample_Accession_ID:=Accession_ID,Study_Accession_ID,Species",
+        "/attribute/RNASeq:Replicate/Sample_Accession_ID=%(Sample_Accession_ID)s&Number=%(replicate_number)s/Replicate_Accession_ID:=Accession_ID,Data_Provider,Consortium"
+      ],
       "column_value_templates": {
         "caption": "%(Species)s %(sample_internal_id)s replicate %(replicate_number)s %(file_desc)s."
       },
       "hatrac_templates":{
         "hatrac_uri": "/hatrac/resources/rnaseq/study/%(Study_Accession_ID)s/sample/%(Sample_Accession_ID)s/replicate/%(Replicate_Accession_ID)s/%(Accession_ID)s.%(file_ext)s",
-        "hatrac_filename": "%(sample_internal_id)s_Rep%(replicate_number)s%(custom)s.%(file_ext)s",
-        "content-disposition": "filename*=UTF-8''%(hatrac_filename)s"
+        "content-disposition": "filename*=UTF-8''%(sample_internal_id)s_Rep%(replicate_number)s%(custom)s.%(file_ext)s"
+      },
+      "hatrac_options": {
+        "versioned_urls": "False"
       },
       "column_map": {
         "URI": "%(URI)s",
-        "File_Name": "%(basename)s",
+        "File_Name": "%(file_name)s",
         "File_Type": "%(file_type)s",
         "File_size": "%(file_size)d",
         "SHA256": "%(sha256)s",

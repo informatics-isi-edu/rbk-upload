@@ -3,6 +3,7 @@
 block_cipher = None
 
 from os import environ as env
+from rbk_upload.upload import RBKUpload
 
 a = Analysis(['rbk_upload/upload.py'],
              pathex=[''],
@@ -43,7 +44,7 @@ app = BUNDLE(coll,
          bundle_identifier='org.qt-project.Qt.QtWebEngineCore',
          info_plist={
             'CFBundleDisplayName': 'RBK File Upload Utility',
-            'CFBundleShortVersionString':'0.1.0',
+            'CFBundleShortVersionString':RBKUpload.getVersion(),
             'NSPrincipalClass':'NSApplication',
             'NSHighResolutionCapable': 'True'
          })
