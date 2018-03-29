@@ -1,9 +1,6 @@
 import sys
-
-from deriva_io.deriva_upload import DerivaUpload
-from deriva_qt.upload_gui.upload_app import DerivaUploadGUI
-
-from upload.deriva_upload_cli import DerivaUploadCLI
+from deriva.qt import DerivaUploadGUI
+from deriva.transfer import DerivaUpload, DerivaUploadCLI
 
 DESC = "RBK Data Upload Utility"
 INFO = "For more information see: https://github.com/informatics-isi-edu/rbk-upload"
@@ -52,6 +49,7 @@ def gui_main():
 def cli_main():
     cli = DerivaUploadCLI(RBKUpload, DESC, INFO)
     cli.main()
+
 
 if __name__ == '__main__':
     sys.exit(gui_main())
