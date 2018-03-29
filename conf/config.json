@@ -1,6 +1,6 @@
 {
-  "version_compatibility": [">=0.2.0", "<1.0.0"],
-  "version_update_url": "https://github.com/informatics-isi-edu/rbk-upload/releases",
+  "version_compatibility": [[">=0.4.3", "<1.0.0"]],
+  "version_update_url": "https://github.com/informatics-isi-edu/deriva-qt/releases",
   "asset_mappings": [
     {
       "dir_pattern": "^.*/rnaseq/(?P<study_internal_id>.+?)/",
@@ -8,33 +8,33 @@
       "ext_pattern": "(?P<file_ext>(bam|bed|bw|(R1|R2)[.]fastq[.]gz|(gene[.]rpkm|tpm)[.]txt))$",
       "target_table": ["RNASeq", "File"],
       "create_record_before_upload": "True",
-      "record_query_template": "/entity/%(target_table)s/SHA256=%(sha256)s",
+      "record_query_template": "/entity/{target_table}/SHA256={sha256}",
       "metadata_query_templates": [
-        "/attribute/RNASeq:Sample/Internal_ID=%(sample_internal_id)s/Sample_Accession_ID:=Accession_ID,Study_Accession_ID,Species",
-        "/attribute/RNASeq:Replicate/Sample_Accession_ID=%(Sample_Accession_ID)s&Number=%(replicate_number)s/Replicate_Accession_ID:=Accession_ID,Data_Provider,Consortium"
+        "/attribute/RNASeq:Sample/Internal_ID={sample_internal_id}/Sample_Accession_ID:=Accession_ID,Study_Accession_ID,Species",
+        "/attribute/RNASeq:Replicate/Sample_Accession_ID={Sample_Accession_ID}&Number={replicate_number}/Replicate_Accession_ID:=Accession_ID,Data_Provider,Consortium"
       ],
       "column_value_templates": {
-        "caption": "%(Species)s %(sample_internal_id)s replicate %(replicate_number)s %(file_desc)s."
+        "caption": "{Species} {sample_internal_id} replicate {replicate_number} {file_desc}."
       },
       "hatrac_templates":{
-        "hatrac_uri": "/hatrac/resources/rnaseq/study/%(Study_Accession_ID)s/sample/%(Sample_Accession_ID)s/replicate/%(Replicate_Accession_ID)s/%(Accession_ID)s.%(file_ext)s",
-        "content-disposition": "filename*=UTF-8''%(sample_internal_id)s_Rep%(replicate_number)s%(custom)s.%(file_ext)s"
+        "hatrac_uri": "/hatrac/resources/rnaseq/study/{Study_Accession_ID}/sample/{Sample_Accession_ID}/replicate/{Replicate_Accession_ID}/{Accession_ID}.{file_ext}",
+        "content-disposition": "filename*=UTF-8''{sample_internal_id}_Rep{replicate_number}{custom}.{file_ext}"
       },
       "hatrac_options": {
         "versioned_urls": "False"
       },
       "column_map": {
-        "URI": "%(URI)s",
-        "File_Name": "%(file_name)s",
-        "File_Type": "%(file_type)s",
-        "File_size": "%(file_size)d",
-        "SHA256": "%(sha256)s",
-        "Accession_ID": "%(Accession_ID)s",
-        "Sample_Accession_ID": "%(Sample_Accession_ID)s",
-        "Replicate_Accession_ID": "%(Replicate_Accession_ID)s",
-        "Consortium": "%(Consortium)s",
-        "Data_Provider": "%(Data_Provider)s",
-        "Caption": "%(caption)s"
+        "URI": "{URI}",
+        "File_Name": "{file_name}",
+        "File_Type": "{file_type}",
+        "File_size": "{file_size}",
+        "SHA256": "{sha256}",
+        "Accession_ID": "{Accession_ID}",
+        "Sample_Accession_ID": "{Sample_Accession_ID}",
+        "Replicate_Accession_ID": "{Replicate_Accession_ID}",
+        "Consortium": "{Consortium}",
+        "Data_Provider": "{Data_Provider}",
+        "Caption": "{caption}"
       },
       "checksum_types": [
         "sha256", "md5"

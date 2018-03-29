@@ -1,10 +1,9 @@
-import os
 import sys
-import logging
-from deriva_common import urlquote, read_config
+
 from deriva_io.deriva_upload import DerivaUpload
-from deriva_io.deriva_upload_cli import DerivaUploadCLI
 from deriva_qt.upload_gui.upload_app import DerivaUploadGUI
+
+from upload.deriva_upload_cli import DerivaUploadCLI
 
 DESC = "RBK Data Upload Utility"
 INFO = "For more information see: https://github.com/informatics-isi-edu/rbk-upload"
